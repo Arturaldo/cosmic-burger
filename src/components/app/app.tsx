@@ -1,5 +1,5 @@
 import { Preloader } from '@krgaa/react-developer-burger-ui-components';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback } from 'react';
 
 import { AppHeader } from '@components/app-header/app-header';
 import { BurgerConstructor } from '@components/burger-constructor/burger-constructor';
@@ -7,72 +7,29 @@ import { BurgerIngredients } from '@components/burger-ingredients/burger-ingredi
 import { IngredientDetails } from '@components/ingredient-details/ingredient-details';
 import { Modal } from '@components/modal/modal';
 import { OrderDetails } from '@components/order-details/order-details';
-import { getIngredients } from '@utils/api';
-import { FALLBACK_INGREDIENTS } from '@utils/fallback-ingredients';
-
-import type { TBurgerComposition, TIngredient } from '@utils/types';
+import { useGetIngredientsQuery } from '@services/api';
+import { useAppDispatch, useAppSelector } from '@services/hooks';
+import { selectViewedIngredient } from '@services/ingredient-details/selectors';
+import { clearViewedIngredient } from '@services/ingredient-details/slice';
+import { selectIsOrderModalOpen } from '@services/order/selectors';
+import { closeOrderModal } from '@services/order/slice';
 
 import styles from './app.module.css';
 
 export const App = (): React.JSX.Element => {
-  const [ingredients, setIngredients] = useState<TIngredient[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [activeIngredient, setActiveIngredient] = useState<TIngredient | null>(null);
-  const [isOrderModalOpen, setIsOrderModalOpen] = useState<boolean>(false);
+  const dispatch = useAppDispatch();
+  const { data: ingredients = [], isError, isLoading } = useGetIngredientsQuery();
 
-  useEffect(() => {
-    getIngredients()
-      .then((data) => {
-        setIngredients(data);
-      })
-      .catch(() => {
-        console.warn('Сервер ингредиентов недоступен, показаны демо-данные');
-        setIngredients(FALLBACK_INGREDIENTS);
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
-  }, []);
-
-  const burgerComposition = useMemo((): TBurgerComposition => {
-    const bun = ingredients.find((ingredient) => ingredient.type === 'bun') ?? null;
-    const fillings = ingredients
-      .filter((ingredient) => ingredient.type !== 'bun')
-      .slice(0, 6);
-
-    return { bun, fillings };
-  }, [ingredients]);
-
-  const ingredientCounts = useMemo((): Map<string, number> => {
-    const counts = new Map<string, number>();
-    const { bun, fillings } = burgerComposition;
-
-    if (bun) {
-      counts.set(bun._id, 2);
-    }
-
-    fillings.forEach((filling) => {
-      counts.set(filling._id, (counts.get(filling._id) ?? 0) + 1);
-    });
-
-    return counts;
-  }, [burgerComposition]);
-
-  const openIngredientModal = useCallback((ingredient: TIngredient): void => {
-    setActiveIngredient(ingredient);
-  }, []);
+  const viewedIngredient = useAppSelector(selectViewedIngredient);
+  const isOrderModalOpen = useAppSelector(selectIsOrderModalOpen);
 
   const closeIngredientModal = useCallback((): void => {
-    setActiveIngredient(null);
-  }, []);
+    dispatch(clearViewedIngredient());
+  }, [dispatch]);
 
-  const openOrderModal = useCallback((): void => {
-    setIsOrderModalOpen(true);
-  }, []);
-
-  const closeOrderModal = useCallback((): void => {
-    setIsOrderModalOpen(false);
-  }, []);
+  const handleCloseOrderModal = useCallback((): void => {
+    dispatch(closeOrderModal());
+  }, [dispatch]);
 
   return (
     <div className={styles.app}>
@@ -86,28 +43,27 @@ export const App = (): React.JSX.Element => {
             <Preloader />
           </div>
         )}
-        {!isLoading && (
+        {isError && (
+          <div className={styles.status}>
+            <p className="text text_type_main-medium">
+              Не удалось загрузить ингредиенты. Обновите страницу.
+            </p>
+          </div>
+        )}
+        {!isLoading && !isError && (
           <>
-            <BurgerIngredients
-              ingredients={ingredients}
-              counts={ingredientCounts}
-              onIngredientClick={openIngredientModal}
-            />
-            <BurgerConstructor
-              bun={burgerComposition.bun}
-              fillings={burgerComposition.fillings}
-              onOrderClick={openOrderModal}
-            />
+            <BurgerIngredients ingredients={ingredients} />
+            <BurgerConstructor />
           </>
         )}
       </main>
-      {activeIngredient && (
+      {viewedIngredient && (
         <Modal title="Детали ингредиента" onClose={closeIngredientModal}>
-          <IngredientDetails ingredient={activeIngredient} />
+          <IngredientDetails ingredient={viewedIngredient} />
         </Modal>
       )}
       {isOrderModalOpen && (
-        <Modal onClose={closeOrderModal}>
+        <Modal onClose={handleCloseOrderModal}>
           <OrderDetails />
         </Modal>
       )}
