@@ -2,6 +2,36 @@
   display: flex;
   flex-direction: column;
   width: 600px;
-  padding-bottom: 20px;
+  max-height: 100%;
   color: var(--text-primary-color);
+}
+
+.fillings_list {
+  display: flex;
+  flex-grow: 1;
+  flex-direction: column;
+  gap: 16px;
+  min-height: 0;
+  margin-top: 16px;
+  margin-bottom: 16px;
+  overflow-y: auto;
+}
+
+.filling_row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.footer {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 40px;
+  margin-top: 40px;
+}
+
+.total_price {
+  display: flex;
+  align-items: center;
 }

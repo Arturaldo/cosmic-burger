@@ -3,13 +3,56 @@
   flex-direction: column;
   max-width: 600px;
   color: var(--text-primary-color);
-  font-family: 'Jet Brains Mono', serif;
 }
 
-.menu {
+.tabs {
   display: flex;
+}
+
+.ingredients_scroll {
+  flex-grow: 1;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+.category {
+  margin-bottom: 20px;
+}
+
+.category_title {
+  margin-bottom: 16px;
+}
+
+.category_list {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px 24px;
   margin: 0;
   padding: 0;
-  text-align: center;
   list-style-type: none;
+}
+
+.ingredient_card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+}
+
+.ingredient_image {
+  width: 240px;
+  height: 120px;
+  object-fit: contain;
+}
+
+.ingredient_price {
+  display: flex;
+  align-items: center;
+  margin-top: 4px;
+}
+
+.ingredient_name {
+  margin-top: 8px;
+  text-align: center;
 }

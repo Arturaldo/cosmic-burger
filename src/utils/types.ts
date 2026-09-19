@@ -1,7 +1,9 @@
+export type TIngredientType = 'bun' | 'main' | 'sauce';
+
 export type TIngredient = {
   _id: string;
   name: string;
-  type: string;
+  type: TIngredientType;
   proteins: number;
   fat: number;
   carbohydrates: number;
@@ -11,4 +13,14 @@ export type TIngredient = {
   image_large: string;
   image_mobile: string;
   __v: number;
+};
+
+export type TIngredientsResponse = {
+  success: boolean;
+  data: TIngredient[];
+};
+
+export type TBurgerComposition = {
+  bun: TIngredient | null;
+  fillings: TIngredient[];
 };
