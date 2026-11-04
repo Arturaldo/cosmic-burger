@@ -1,0 +1,7 @@
+.filling_row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  list-style-type: none;
+  cursor: grab;
+}
