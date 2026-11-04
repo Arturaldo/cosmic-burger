@@ -2,6 +2,13 @@ body {
   margin: 0;
 }
 
+/* Общие стили ссылок на страницах приложения */
+
+.link {
+  color: var(--colors-interface-accent);
+  text-decoration: none;
+}
+
 /* Fix for scrollbar */
 
 @supports (scrollbar-color: auto) {

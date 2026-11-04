@@ -1,0 +1,18 @@
+.profile_form {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  width: 100%;
+  max-width: 480px;
+}
+
+.error {
+  margin: 0;
+  color: var(--colors-interface-error);
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 16px;
+}
