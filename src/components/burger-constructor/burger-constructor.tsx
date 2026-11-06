@@ -5,6 +5,7 @@ import {
 } from '@krgaa/react-developer-burger-ui-components';
 import { useCallback, useRef } from 'react';
 import { useDrop } from 'react-dnd';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 import { ConstructorIngredient } from '@components/constructor-ingredient/constructor-ingredient';
 import { useCreateOrderMutation } from '@services/api';
@@ -17,6 +18,7 @@ import {
 import { addIngredient } from '@services/burger-constructor/slice';
 import { useAppDispatch, useAppSelector } from '@services/hooks';
 import { selectOrderError } from '@services/order/selectors';
+import { selectUser } from '@services/user/selectors';
 import { DND_TYPES } from '@utils/constants';
 
 import type { TDragItem } from '@utils/types';
@@ -25,11 +27,14 @@ import styles from './burger-constructor.module.css';
 
 export const BurgerConstructor = (): React.JSX.Element => {
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+  const location = useLocation();
   const bun = useAppSelector(selectConstructorBun);
   const ingredients = useAppSelector(selectConstructorIngredients);
   const totalPrice = useAppSelector(selectTotalPrice);
   const orderIngredientIds = useAppSelector(selectOrderIngredientIds);
   const orderError = useAppSelector(selectOrderError);
+  const user = useAppSelector(selectUser);
 
   const [createOrder, { isLoading: isOrderLoading }] = useCreateOrderMutation();
 
@@ -52,8 +57,15 @@ export const BurgerConstructor = (): React.JSX.Element => {
       return;
     }
 
+    // Заказы оформляют только авторизованные пользователи.
+    if (!user) {
+      void navigate('/login', { state: { from: location } });
+
+      return;
+    }
+
     void createOrder(orderIngredientIds);
-  }, [createOrder, orderIngredientIds]);
+  }, [createOrder, location, navigate, orderIngredientIds, user]);
 
   return (
     <section className={styles.burger_constructor} aria-label="Конструктор бургера">

@@ -1,12 +1,13 @@
 import { Counter, CurrencyIcon } from '@krgaa/react-developer-burger-ui-components';
 import { useCallback, useRef } from 'react';
 import { useDrag } from 'react-dnd';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 import { useAppDispatch } from '@services/hooks';
 import { setViewedIngredient } from '@services/ingredient-details/slice';
 import { DND_TYPES } from '@utils/constants';
 
-import type { TDragItem, TIngredient } from '@utils/types';
+import type { TDragItem, TIngredient, TLocationState } from '@utils/types';
 
 import styles from './ingredient-card.module.css';
 
@@ -20,6 +21,8 @@ export const IngredientCard = ({
   count,
 }: TIngredientCardProps): React.JSX.Element => {
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+  const location = useLocation();
   const cardRef = useRef<HTMLElement>(null);
 
   const [{ isDragging }, dragRef] = useDrag<TDragItem, unknown, { isDragging: boolean }>(
@@ -37,7 +40,11 @@ export const IngredientCard = ({
 
   const handleClick = useCallback((): void => {
     dispatch(setViewedIngredient(ingredient));
-  }, [dispatch, ingredient]);
+    // Переходим на маршрут ингредиента и запоминаем фон для модального окна.
+    void navigate(`/ingredients/${ingredient._id}`, {
+      state: { background: location } satisfies TLocationState,
+    });
+  }, [dispatch, ingredient, location, navigate]);
 
   return (
     <article
