@@ -13,3 +13,6 @@ export const rootReducer = combineReducers({
   order: orderReducer,
   user: userReducer,
 });
+
+/** Тип хранилища — на основе типа корневого редьюсера и ReturnType. */
+export type TRootState = ReturnType<typeof rootReducer>;

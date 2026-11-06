@@ -1,4 +1,4 @@
-import type { TRootState } from '@services/store';
+import type { TRootState } from '@services/root-reducer';
 import type { TUser } from '@utils/types';
 
 export const selectUser = (state: TRootState): TUser | null => state.user.user;

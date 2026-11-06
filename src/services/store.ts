@@ -13,5 +13,6 @@ export const store = configureStore({
 
 setupListeners(store.dispatch);
 
-export type TRootState = ReturnType<typeof store.getState>;
+// Тип состояния хранилища TRootState описан в root-reducer.ts
+// на основе типа корневого редьюсера.
 export type TAppDispatch = typeof store.dispatch;
