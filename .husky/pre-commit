@@ -1,1 +1,4 @@
-npx lint-staged
+# lint-staged запускается напрямую из node_modules/.bin (husky сам добавляет её в PATH),
+# а не через npx: в GUI-клиентах на Windows (SourceTree) глобальный npx недоступен
+# для хуков, и коммит падает с ошибкой 127 «command not found».
+lint-staged
