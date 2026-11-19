@@ -2,18 +2,18 @@ import { Preloader } from '@krgaa/react-developer-burger-ui-components';
 import { useParams } from 'react-router-dom';
 
 import { OrderInfo } from '@components/order-info/order-info';
-import { useGetOrderByNumberQuery } from '@services/feed/api';
+import { useOrder } from '@services/feed/use-order';
 
 import styles from './order.module.css';
 
 export const OrderPage = (): React.JSX.Element => {
   const { number } = useParams<{ number: string }>();
-  const { data: order, isError, isLoading } = useGetOrderByNumberQuery(Number(number));
+  const { order, isLoading } = useOrder(Number(number));
 
   return (
     <section className={styles.order_page}>
       {isLoading && <Preloader />}
-      {(isError || (!isLoading && !order)) && (
+      {!isLoading && !order && (
         <p className="text text_type_main-medium">Заказ не найден.</p>
       )}
       {order && (

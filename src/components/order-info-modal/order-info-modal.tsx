@@ -1,23 +1,16 @@
 import { Preloader } from '@krgaa/react-developer-burger-ui-components';
 import { useCallback } from 'react';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 import { Modal } from '@components/modal/modal';
 import { OrderInfo } from '@components/order-info/order-info';
-import { useGetOrderByNumberQuery } from '@services/feed/api';
-
-import type { TLocationState } from '@utils/types';
+import { useOrder } from '@services/feed/use-order';
 
 export const OrderInfoModal = (): React.JSX.Element => {
   const navigate = useNavigate();
-  const location = useLocation();
   const { number } = useParams<{ number: string }>();
 
-  const stateOrder = (location.state as TLocationState | null)?.order;
-  const { data: fetchedOrder } = useGetOrderByNumberQuery(Number(number), {
-    skip: Boolean(stateOrder),
-  });
-  const order = stateOrder ?? fetchedOrder;
+  const { order } = useOrder(Number(number));
 
   const handleClose = useCallback((): void => {
     void navigate(-1);
