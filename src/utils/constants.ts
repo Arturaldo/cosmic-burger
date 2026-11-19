@@ -1,3 +1,4 @@
+export const WS_BASE_URL = 'wss://new-stellarburgers.education-services.ru';
 export const API_BASE_URL = 'https://new-stellarburgers.education-services.ru/api';
 
 /** Имена cookie, в которых хранятся токены авторизации. */

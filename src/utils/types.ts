@@ -108,4 +108,37 @@ export type TPasswordResetResponse = {
 export type TLocationState = {
   background?: Location;
   from?: Location;
+  order?: TOrder;
+};
+
+export type TOrderStatus = 'created' | 'pending' | 'done';
+
+export type TOrder = {
+  _id: string;
+  number: number;
+  name: string;
+  status: TOrderStatus;
+  ingredients: string[];
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type TOrdersFeed = {
+  orders: TOrder[];
+  total: number;
+  totalToday: number;
+  isLoaded: boolean;
+};
+
+export type TOrdersSocketMessage = {
+  success: boolean;
+  message?: string;
+  orders?: TOrder[];
+  total?: number;
+  totalToday?: number;
+};
+
+export type TOrdersByNumberResponse = {
+  success: boolean;
+  orders: TOrder[];
 };

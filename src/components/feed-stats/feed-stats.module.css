@@ -1,0 +1,30 @@
+.stats {
+  flex: 1;
+}
+
+.boards {
+  display: flex;
+  gap: 36px;
+}
+
+.board {
+  flex: 1;
+}
+
+.columns {
+  display: flex;
+  gap: 24px;
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.done {
+  color: #0cc;
+}

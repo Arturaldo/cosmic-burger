@@ -2,12 +2,15 @@ import { Route, Routes, useLocation } from 'react-router-dom';
 
 import { AppHeader } from '@components/app-header/app-header';
 import { IngredientDetailsModal } from '@components/ingredient-details-modal/ingredient-details-modal';
+import { OrderInfoModal } from '@components/order-info-modal/order-info-modal';
 import { ProtectedRoute } from '@components/protected-route/protected-route';
+import { FeedPage } from '@pages/feed';
 import { ForgotPasswordPage } from '@pages/forgot-password';
 import { HomePage } from '@pages/home';
 import { IngredientPage } from '@pages/ingredient';
 import { LoginPage } from '@pages/login';
 import { NotFoundPage } from '@pages/not-found';
+import { OrderPage } from '@pages/order';
 import { ProfilePage } from '@pages/profile';
 import { ProfileOrdersPage } from '@pages/profile-orders';
 import { ProfileSettingsPage } from '@pages/profile-settings';
@@ -79,13 +82,32 @@ export const App = (): React.JSX.Element => {
             <Route path="orders" element={<ProfileOrdersPage />} />
           </Route>
           <Route path="/ingredients/:id" element={<IngredientPage />} />
+          <Route path="/feed" element={<FeedPage />} />
+          <Route path="/feed/:number" element={<OrderPage />} />
+          <Route
+            path="/profile/orders/:number"
+            element={
+              <ProtectedRoute>
+                <OrderPage />
+              </ProtectedRoute>
+            }
+          />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </main>
-      {/* Модальное окно ингредиента поверх страницы, с которой оно открыто. */}
+      {/* Модальное окно ингредиента или заказа поверх страницы, с которой оно открыто. */}
       {background && (
         <Routes>
           <Route path="/ingredients/:id" element={<IngredientDetailsModal />} />
+          <Route path="/feed/:number" element={<OrderInfoModal />} />
+          <Route
+            path="/profile/orders/:number"
+            element={
+              <ProtectedRoute>
+                <OrderInfoModal />
+              </ProtectedRoute>
+            }
+          />
         </Routes>
       )}
     </div>

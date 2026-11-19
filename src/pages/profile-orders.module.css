@@ -1,0 +1,6 @@
+.orders {
+  flex: 1;
+  min-height: 0;
+  padding-right: 8px;
+  overflow-y: auto;
+}
